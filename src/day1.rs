@@ -65,8 +65,7 @@ pub fn run_part2() {
                             _ => None,
                         };
                         // If the match was successful
-                        if digit_opt.is_some() {
-                            let digit = digit_opt.unwrap_or(0);
+                        if let Some(digit) = digit_opt {
                             // Only set tens once
                             if tens == 0 {
                                 tens = digit * 10;
