@@ -1,22 +1,13 @@
-use crate::lines::read;
-
-pub fn run_part1() {
+pub fn run_part1(input: Vec<String>) {
     let mut result = 0;
-    // Read lines of input
-    if let Ok(lines) = read("./inputs/day2/input.txt") {
-        // Iterate over the lines
-        for line_result in lines {
-            // If the line is okay
-            if let Ok(line) = line_result {
-                let mut game_info = line.split(": ");
-                if let Some(game_id) = game_info.nth(0) {
-                    if let Some(id_str) = game_id.split(' ').nth(1) {
-                        if let Ok(id) = id_str.parse::<u32>() {
-                            if let Some(sets) = game_info.nth(0) {
-                                if is_game_possible_part1(sets) {
-                                    result = result + id;
-                                }
-                            }
+    for line in input {
+        let mut game_info = line.split(": ");
+        if let Some(game_id) = game_info.nth(0) {
+            if let Some(id_str) = game_id.split(' ').nth(1) {
+                if let Ok(id) = id_str.parse::<u32>() {
+                    if let Some(sets) = game_info.nth(0) {
+                        if is_game_possible_part1(sets) {
+                            result = result + id;
                         }
                     }
                 }
@@ -51,19 +42,12 @@ fn is_game_possible_part1(sets: &str) -> bool {
     return true;
 }
 
-pub fn run_part2() {
+pub fn run_part2(input: Vec<String>) {
     let mut result = 0;
-    // Read lines of input
-    if let Ok(lines) = read("./inputs/day2/input.txt") {
-        // Iterate over the lines
-        for line_result in lines {
-            // If the line is okay
-            if let Ok(line) = line_result {
-                let mut game_info = line.split(": ");
-                if let Some(sets) = game_info.nth(1) {
-                    result = result + min_cubes_in_game(sets);
-                }
-            }
+    for line in input {
+        let mut game_info = line.split(": ");
+        if let Some(sets) = game_info.nth(1) {
+            result = result + min_cubes_in_game(sets);
         }
     }
     println!("{result}");
