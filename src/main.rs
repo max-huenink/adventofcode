@@ -2,12 +2,12 @@ mod year2023;
 
 fn main() {
     let supported_puzzles = ["2023/1", "2023/2", "2023/3", "2024/1"];
-    println!("Input the year, day, and part of the puzzle to solve. e.g. 2025/1/1 or 25/1/1");
     println!("Supported puzzles are: ");
     for supported in supported_puzzles {
-        print!("{supported}");
+        println!("{supported}");
     }
-    print!("\n");
+    println!("");
+    println!("Input the year, day, and part of the puzzle to solve. e.g. 2025/1/1 or 25/1/1");
 
     let Some(puzzle) = read_input() else {
         panic!("No input received!");
@@ -17,13 +17,23 @@ fn main() {
         panic!("Puzzle {puzzle} is not supported!");
     }
 
-    // TODO: Fix?
-    // 2023/1/1 -> [2023, 1]
-    let v: Vec<i32> = puzzle
+    let puzzle_parts: Vec<i32> = puzzle
         .split('/')
         .take(3)
-        .filter_map(|p| p.parse::<i32>().ok())
+        .filter_map(|p| p.trim().parse::<i32>().ok())
         .collect();
+
+    let puzzle_func = match puzzle_parts[..] {
+        [2023, 1, 1] => year2023::day1::run_part1,
+        [2023, 1, 2] => year2023::day1::run_part2,
+        [2023, 2, 1] => year2023::day2::run_part1,
+        [2023, 2, 2] => year2023::day2::run_part2,
+        [2023, 3, 1] => year2023::day3::run_part1,
+        [2023, 3, 2] => year2023::day3::run_part2,
+        _ => panic!("Puzzle not supported, you entered {puzzle_parts:?}"),
+    };
+
+    println!("Please enter the puzzle input followed by an empty line to run the puzzle:");
 
     let mut puzzle_input = Vec::<String>::new();
     loop {
@@ -36,17 +46,7 @@ fn main() {
         break;
     }
 
-    // TODO: Switch to a trait for the different days, so we don't grow this exponentially year over year?
-    // TODO: Switch to a trait for the part1/2 functions
-    match v[..] {
-        [2023, 1, 1] => year2023::day1::run_part1(puzzle_input),
-        [2023, 1, 2] => year2023::day1::run_part2(puzzle_input),
-        [2023, 2, 1] => year2023::day2::run_part1(puzzle_input),
-        [2023, 2, 2] => year2023::day2::run_part2(puzzle_input),
-        [2023, 3, 1] => year2023::day3::run_part1(puzzle_input),
-        [2023, 3, 2] => year2023::day3::run_part2(puzzle_input),
-        _ => panic!("Puzzle not supported, you entered {v:?}"),
-    }
+    puzzle_func(puzzle_input);
 }
 
 fn read_input() -> Option<String> {
