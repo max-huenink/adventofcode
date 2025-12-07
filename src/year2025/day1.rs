@@ -35,13 +35,15 @@ pub fn run_part2(input: Vec<String>) {
             panic!("Count was not a number, parsing {line}");
         };
 
-        if direction == Some('L') && point != 0 && count > point {
-            zeros += 1;
-        }
-
         point += count
             * match direction {
-                Some('L') => -1,
+                Some('L') => {
+                    if point != 0 && count > point {
+                        zeros += 1;
+                    }
+
+                    -1
+                }
                 Some('R') => 1,
                 _ => panic!("Direction was not 'L' or 'R', parsing {line}"),
             };
