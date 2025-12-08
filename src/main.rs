@@ -2,7 +2,7 @@ mod year2023;
 mod year2025;
 
 fn main() {
-    let supported_puzzles = ["2023/1", "2023/2", "2023/3", "2025/1", "2025/2"];
+    let supported_puzzles = ["2023/1", "2023/2", "2023/3", "2025/1", "2025/2", "2025/3"];
     println!("Supported puzzles are: ");
     for supported in supported_puzzles {
         println!("{supported}");
@@ -35,6 +35,8 @@ fn main() {
         [2025, 1, 2] => year2025::day1::run_part2,
         [2025, 2, 1] => year2025::day2::run_part1,
         [2025, 2, 2] => year2025::day2::run_part2,
+        [2025, 3, 1] => year2025::day3::run_part1,
+        [2025, 3, 2] => year2025::day3::run_part2,
         _ => panic!("Puzzle not supported, you entered {puzzle_parts:?}"),
     };
 
