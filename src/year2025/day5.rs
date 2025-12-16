@@ -51,43 +51,62 @@ pub fn run_part2(input: Vec<String>) {
     }
 
     let mut count = 0;
+    let mut duplicates_seen = Vec::<std::ops::Range<u64>>::new();
     for idx in 0..fresh_id_ranges.len() {
         let range = &fresh_id_ranges[idx];
+        println!("Range {range:?}");
+
+        let mut ranges_to_check: [&[std::ops::Range<u64>]; 2] = [&[], &[]];
 
         if idx > 0 {
-            let before_ranges = &fresh_id_ranges[..idx];
-
-            if before_ranges
-                .iter()
-                .any(|r| r.contains(&range.start) && r.contains(&range.end))
-            {
-                continue;
-            }
-            for before in before_ranges {
-                if before.contains(&range.start) && !before.contains(&range.end) {
-                    count -= (range.start..before.end).count() as i64;
-                }
-            }
+            ranges_to_check[0] = &fresh_id_ranges[..idx];
         }
 
         if (idx + 1) < fresh_id_ranges.len() {
-            let after_ranges = &fresh_id_ranges[(idx + 1)..];
-
-            if after_ranges
-                .iter()
-                .any(|r| r.contains(&range.start) && r.contains(&range.end))
-            {
-                continue;
-            }
-
-            for after in after_ranges {
-                if after.contains(&range.start) && !after.contains(&range.end) {
-                    count -= (range.start..after.end).count() as i64;
-                }
-            }
+            ranges_to_check[1] = &fresh_id_ranges[(idx + 1)..];
         }
 
+        let all_ranges_to_check = ranges_to_check.iter().flat_map(|r| r.iter());
+
+        let count_duplicate_ranges = all_ranges_to_check
+            .clone()
+            .filter(|r| r.start == range.start && r.end == range.end)
+            .count();
+        let already_seen_duplicate = duplicates_seen
+            .clone()
+            .into_iter()
+            .filter(|r| r.start == range.start && r.end == range.end)
+            .count()
+            == 1;
+
+        if count_duplicate_ranges > 0 && !already_seen_duplicate {
+            duplicates_seen.push(range.clone());
+            count += range.clone().count() as i64;
+        }
+
+        if all_ranges_to_check
+            .clone()
+            .any(|r| r.contains(&range.start) && (r.contains(&range.end) || r.end == range.end))
+        {
+            println!("\tSkipping {range:?}");
+            continue;
+        }
+
+        println!("\tAdding {} to count ({count})", { range.clone().count() });
         count += range.clone().count() as i64;
+
+        for check in all_ranges_to_check {
+            println!("\tChecking {check:?} against {range:?}");
+            if range.contains(&check.start)
+                && !(range.contains(&check.end) || range.end == check.end)
+            {
+                println!(
+                    "\tSubtracting {} from count ({count})",
+                    (check.start..range.end).count()
+                );
+                count -= (check.start..range.end).count() as i64;
+            }
+        }
     }
 
     println!("{count}");
