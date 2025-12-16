@@ -8,16 +8,15 @@ pub fn run_part1(input: Vec<String>) {
     let ans: i64 = line
         .split(',')
         .map(|r| {
-            let id_range: Vec<&str> = r.split('-').map(|i| i.trim()).collect();
+            let mut id_range = r.split('-').map(|i| i.trim());
 
-            if id_range.len() == 2
-                && (id_range[0].len() % 2 == 0
-                    || id_range[1].len() % 2 == 0
-                    || id_range[1].len() - id_range[0].len() > 1)
+            if let Some(start) = id_range.next()
+                && let Some(end) = id_range.next()
+                && (start.len() % 2 == 0 || end.len() % 2 == 0 || start.len() - end.len() > 1)
             {
                 let mut count = 0;
-                let start = id_range[0].parse::<i64>().unwrap();
-                let end = id_range[1].parse::<i64>().unwrap() + 1;
+                let start = start.parse::<i64>().unwrap();
+                let end = end.parse::<i64>().unwrap() + 1;
 
                 for id in start..end {
                     let id_str = id.to_string();
@@ -50,13 +49,12 @@ pub fn run_part2(input: Vec<String>) {
     let ans: i64 = line
         .split(',')
         .map(|r| {
-            let id_range: Vec<&str> = r.split('-').map(|i| i.trim()).collect();
+            let mut id_range = r.split('-').filter_map(|i| i.trim().parse::<i64>().ok());
 
-            if id_range.len() == 2 {
-                let mut count = 0;
-                let start = id_range[0].parse::<i64>().unwrap();
-                let end = id_range[1].parse::<i64>().unwrap() + 1;
-
+            let mut count = 0;
+            if let Some(start) = id_range.next()
+                && let Some(end) = id_range.next()
+            {
                 for id in start..end {
                     let id_str = id.to_string();
                     let length = id_str.len();
@@ -69,10 +67,9 @@ pub fn run_part2(input: Vec<String>) {
                         count += id;
                     }
                 }
-                count
-            } else {
-                0
             }
+
+            count
         })
         .sum();
 
