@@ -1,3 +1,4 @@
+use std::time::Instant;
 mod year2023;
 mod year2025;
 
@@ -67,7 +68,11 @@ fn main() {
     // Remove the last line which is empty
     puzzle_input.pop();
 
+    let start_time = Instant::now();
     puzzle_func(puzzle_input);
+    let end_time = Instant::now();
+    let duration = end_time - start_time;
+    println!("Run took: {duration:?}");
 }
 
 fn read_input() -> Option<String> {
