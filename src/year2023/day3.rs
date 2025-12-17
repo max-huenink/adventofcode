@@ -1,4 +1,4 @@
-pub fn run_part1(input: Vec<String>) {
+pub fn run_part1(input: &[String]) {
     let mut result = 0;
     let mut x = vec!['.'; 10 * 10];
     let mut i = 0;
@@ -19,6 +19,6 @@ pub fn run_part1(input: Vec<String>) {
     println!("{result}");
 }
 
-pub fn run_part2(input: Vec<String>) {
+pub fn run_part2(input: &[String]) {
     for _ in input {}
 }

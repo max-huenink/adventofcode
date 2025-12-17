@@ -1,4 +1,4 @@
-pub fn run_part1(input: Vec<String>) {
+pub fn run_part1(input: &[String]) {
     let points = input
         .iter()
         .map(|line| line.trim().chars().map(|c| c == '@').collect::<Vec<_>>())
@@ -19,7 +19,7 @@ pub fn run_part1(input: Vec<String>) {
     println!("{count}");
 }
 
-pub fn run_part2(input: Vec<String>) {
+pub fn run_part2(input: &[String]) {
     let mut points = input
         .iter()
         .map(|line| line.trim().chars().map(|c| c == '@').collect::<Vec<_>>())

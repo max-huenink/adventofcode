@@ -1,4 +1,4 @@
-pub fn run_part1(input: Vec<String>) {
+pub fn run_part1(input: &[String]) {
     let mut point = 50;
     let mut zeros = 0;
 
@@ -25,7 +25,7 @@ pub fn run_part1(input: Vec<String>) {
     println!("{zeros}");
 }
 
-pub fn run_part2(input: Vec<String>) {
+pub fn run_part2(input: &[String]) {
     let mut point = 50;
     let mut zeros = 0;
 

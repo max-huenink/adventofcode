@@ -1,4 +1,4 @@
-pub fn run_part1(input: Vec<String>) {
+pub fn run_part1(input: &[String]) {
     // Each line contains numeric digits (1-9).
     // Get the first (tens place) and last (ones place) digit in a line and add to result
 
@@ -18,7 +18,7 @@ pub fn run_part1(input: Vec<String>) {
     println!("{}", result);
 }
 
-pub fn run_part2(input: Vec<String>) {
+pub fn run_part2(input: &[String]) {
     // Each line contains numeric digits (1-9) or spelled out digits (one, two, three, four, five, six, seven, eight, nine).
     // Get the first (tens place) and last (ones place) digit in a line and add to result
 

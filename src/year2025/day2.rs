@@ -1,4 +1,4 @@
-pub fn run_part1(input: Vec<String>) {
+pub fn run_part1(input: &[String]) {
     if input.len() > 1 {
         panic!("Input should only be a single line!");
     }
@@ -38,7 +38,7 @@ pub fn run_part1(input: Vec<String>) {
     println!("{ans}");
 }
 
-pub fn run_part2(input: Vec<String>) {
+pub fn run_part2(input: &[String]) {
     if input.len() > 1 {
         panic!("Input should only be a single line!");
     }

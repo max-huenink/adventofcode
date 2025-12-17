@@ -1,4 +1,4 @@
-pub fn run_part1(input: Vec<String>) {
+pub fn run_part1(input: &[String]) {
     let answer = input
         .iter()
         .map(|line| {
@@ -28,7 +28,7 @@ pub fn run_part1(input: Vec<String>) {
     println!("{answer}");
 }
 
-pub fn run_part2(input: Vec<String>) {
+pub fn run_part2(input: &[String]) {
     let answer = input
         .iter()
         .map(|line| {

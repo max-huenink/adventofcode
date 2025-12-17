@@ -69,7 +69,7 @@ fn main() {
     puzzle_input.pop();
 
     let start_time = Instant::now();
-    puzzle_func(puzzle_input);
+    puzzle_func(&puzzle_input);
     let end_time = Instant::now();
     let duration = end_time - start_time;
     println!("Run took: {duration:?}");

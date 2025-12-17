@@ -1,4 +1,4 @@
-pub fn run_part1(input: Vec<String>) {
+pub fn run_part1(input: &[String]) {
     let mut sections = input.split(|line| line.trim().is_empty());
     let Some(fresh_ranges_str) = sections.next() else {
         panic!("No fresh ingredient ranges present!");
@@ -32,7 +32,7 @@ pub fn run_part1(input: Vec<String>) {
     println!("{count}");
 }
 
-pub fn run_part2(input: Vec<String>) {
+pub fn run_part2(input: &[String]) {
     let mut sections = input.split(|line| line.trim().is_empty());
     let Some(fresh_ranges_str) = sections.next() else {
         panic!("No fresh ingredient ranges present!");

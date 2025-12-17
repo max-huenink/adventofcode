@@ -1,4 +1,4 @@
-pub fn run_part1(input: Vec<String>) {
+pub fn run_part1(input: &[String]) {
     let mut result = 0;
     for line in input {
         let mut game_info = line.split(": ");
@@ -42,7 +42,7 @@ fn is_game_possible_part1(sets: &str) -> bool {
     return true;
 }
 
-pub fn run_part2(input: Vec<String>) {
+pub fn run_part2(input: &[String]) {
     let mut result = 0;
     for line in input {
         let mut game_info = line.split(": ");
