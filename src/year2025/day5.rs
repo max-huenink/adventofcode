@@ -68,45 +68,62 @@ pub fn run_part2(input: Vec<String>) {
 
         let all_ranges_to_check = ranges_to_check.iter().flat_map(|r| r.iter());
 
-        let count_duplicate_ranges = all_ranges_to_check
-            .clone()
-            .filter(|r| r.start == range.start && r.end == range.end)
-            .count();
-        let already_seen_duplicate = duplicates_seen
+        if duplicates_seen
             .clone()
             .into_iter()
             .filter(|r| r.start == range.start && r.end == range.end)
             .count()
-            == 1;
-
-        if count_duplicate_ranges > 0 && !already_seen_duplicate {
-            duplicates_seen.push(range.clone());
-            count += range.clone().count() as i64;
+            == 1
+        {
+            println!("\tSkipping {range:?}, duplicate");
+            continue;
         }
 
         if all_ranges_to_check
             .clone()
-            .any(|r| r.contains(&range.start) && (r.contains(&range.end) || r.end == range.end))
+            .filter(|r| r.start == range.start && r.end == range.end)
+            .count()
+            > 0
         {
-            println!("\tSkipping {range:?}");
+            duplicates_seen.push(range.clone());
+        }
+
+        if all_ranges_to_check.clone().any(|r| {
+            r.contains(&range.start)
+                && r.contains(&range.end)
+                && (r.start != range.start && r.end != range.end)
+        }) {
+            println!("\tSkipping {range:?}, contained entirely in another range");
             continue;
         }
 
         println!("\tAdding {} to count ({count})", { range.clone().count() });
         count += range.clone().count() as i64;
 
+        // let mut start = 0;
+        let mut end = 0;
         for check in all_ranges_to_check {
             println!("\tChecking {check:?} against {range:?}");
-            if range.contains(&check.start)
-                && !(range.contains(&check.end) || range.end == check.end)
-            {
-                println!(
-                    "\tSubtracting {} from count ({count})",
-                    (check.start..range.end).count()
-                );
-                count -= (check.start..range.end).count() as i64;
+            // if range.contains(&check.start)
+            //     && !(range.contains(&check.end) || range.end == check.end)
+            // {
+            //     println!(
+            //         "\t\tSubtracting {} from count ({count})",
+            //         (check.start..range.end).count()
+            //     );
+            //     count -= (check.start..range.end).count() as i64;
+            // }
+            if check.contains(&range.start) {
+                // if check.start > start {
+                //     start = check.start;
+                // }
+                if check.end > end {
+                    end = check.end;
+                }
             }
         }
+
+        count -= (range.start..end).count() as i64;
     }
 
     println!("{count}");
