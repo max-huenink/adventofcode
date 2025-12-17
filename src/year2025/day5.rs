@@ -54,7 +54,6 @@ pub fn run_part2(input: Vec<String>) {
     let mut duplicates_seen = Vec::<std::ops::Range<u64>>::new();
     for idx in 0..fresh_id_ranges.len() {
         let range = &fresh_id_ranges[idx];
-        println!("Range {range:?}");
 
         let mut ranges_to_check: [&[std::ops::Range<u64>]; 2] = [&[], &[]];
 
@@ -75,7 +74,6 @@ pub fn run_part2(input: Vec<String>) {
             .count()
             == 1
         {
-            println!("\tSkipping {range:?}, duplicate");
             continue;
         }
 
@@ -88,42 +86,30 @@ pub fn run_part2(input: Vec<String>) {
             duplicates_seen.push(range.clone());
         }
 
-        if all_ranges_to_check.clone().any(|r| {
-            r.contains(&range.start)
-                && r.contains(&range.end)
-                && (r.start != range.start && r.end != range.end)
-        }) {
-            println!("\tSkipping {range:?}, contained entirely in another range");
+        if all_ranges_to_check
+            .clone()
+            .any(|r| r.contains(&range.start) && r.contains(&range.end))
+        {
             continue;
         }
 
-        println!("\tAdding {} to count ({count})", { range.clone().count() });
         count += range.clone().count() as i64;
 
-        // let mut start = 0;
         let mut end = 0;
         for check in all_ranges_to_check {
-            println!("\tChecking {check:?} against {range:?}");
-            // if range.contains(&check.start)
-            //     && !(range.contains(&check.end) || range.end == check.end)
-            // {
-            //     println!(
-            //         "\t\tSubtracting {} from count ({count})",
-            //         (check.start..range.end).count()
-            //     );
-            //     count -= (check.start..range.end).count() as i64;
-            // }
-            if check.contains(&range.start) {
-                // if check.start > start {
-                //     start = check.start;
-                // }
+            if check.contains(&range.start)
+                && (!(range.contains(&check.start)
+                    && (range.contains(&check.end) || range.end == check.end)))
+            {
                 if check.end > end {
                     end = check.end;
                 }
             }
         }
 
-        count -= (range.start..end).count() as i64;
+        if end > 0 {
+            count -= (range.start..end).count() as i64;
+        }
     }
 
     println!("{count}");
