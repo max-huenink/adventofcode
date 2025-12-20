@@ -3,9 +3,7 @@ pub fn run_part1(input: &[String]) {
     let mut operations = Vec::<char>::new();
 
     for line in input {
-        let mut columns = line
-            .split(char::is_whitespace)
-            .filter(|s| !s.trim().is_empty());
+        let mut columns = line.split_whitespace();
 
         let mut idx = 0;
         while let Some(cell) = columns.next() {
@@ -30,9 +28,7 @@ pub fn run_part1(input: &[String]) {
         sum += match operations[idx] {
             '*' => numbers[idx]
                 .iter()
-                .copied()
-                .reduce(|acc, n| acc * n)
-                .unwrap_or(0),
+                .fold(0, |acc, n| if acc == 0 { *n } else { acc * n }),
             '+' => numbers[idx].iter().sum::<i64>(),
             _ => 0,
         };
@@ -43,61 +39,71 @@ pub fn run_part1(input: &[String]) {
 
 pub fn run_part2(input: &[String]) {
     let mut numbers = Vec::<Vec<&str>>::new();
-    let mut operations = Vec::<char>::new();
 
-    for line in input {
-        let mut columns = line
-            .split(char::is_whitespace)
-            .filter(|s| !s.trim().is_empty());
+    let Some(last_line) = input.last() else {
+        panic!("No last line?");
+    };
+    let operations_with_indices = last_line
+        .match_indices(|c: char| !c.is_whitespace())
+        .collect::<Vec<_>>();
 
-        let mut idx = 0;
-        while let Some(cell) = columns.next() {
-            if let Ok(_) = cell.parse::<i64>() {
-                if idx >= numbers.len() {
-                    numbers.push(vec![]);
-                }
+    for line in &input[..(input.len() - 1)] {
+        for idx in 0..operations_with_indices.len() {
+            let r = if idx == operations_with_indices.len() - 1 {
+                operations_with_indices[idx].0..(line.len() - 1)
+            } else {
+                operations_with_indices[idx].0..(operations_with_indices[idx + 1].0 - 1)
+            };
+            let cell = &line[r];
 
+            if idx >= numbers.len() {
+                numbers.push(vec![cell]);
+            } else {
                 numbers[idx].push(cell);
-            } else if cell.len() == 1
-                && let Some(op) = cell.chars().next()
-            {
-                operations.push(op);
             }
-
-            idx += 1;
         }
     }
 
     let mut sum = 0;
     let mut idx = 0;
-    let number_columns = numbers.iter().map(|col| col.iter().map(|c| c.chars()));
+    let number_columns = numbers
+        .iter()
+        .map(|col| col.iter().map(|c| c.chars().rev()).collect::<Vec<_>>());
 
     for mut col in number_columns {
-        let op = operations[idx];
-        let mut acc = 0;
-        let mut f = true;
+        let op = operations_with_indices[idx].1;
+        let mut accumulator = 0;
+        let mut found_a_number = true;
 
-        while f {
-            f = false;
+        while found_a_number {
+            found_a_number = false;
             let mut new_number = 0;
 
-            for mut cell in &mut col {
+            for cell in &mut col {
                 if let Some(c) = cell.next()
                     && let Some(d) = c.to_digit(10)
                 {
-                    new_number += (new_number * 10) + d;
-                    f = true;
+                    new_number = (new_number * 10) + d as u64;
+                    found_a_number = true;
                 }
             }
 
-            match op {
-                '*' => acc *= new_number,
-                '+' => acc += new_number,
-                _ => (),
-            };
+            if new_number != 0 {
+                match op {
+                    "*" => {
+                        if accumulator == 0 {
+                            accumulator = new_number;
+                        } else {
+                            accumulator *= new_number;
+                        }
+                    }
+                    "+" => accumulator += new_number,
+                    _ => (),
+                };
+            }
         }
 
-        sum += acc;
+        sum += accumulator;
         idx += 1;
     }
 
