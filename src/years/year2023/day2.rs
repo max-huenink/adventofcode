@@ -1,23 +1,42 @@
-pub fn run_part1(input: &[String]) {
-    let mut result = 0;
-    for line in input {
-        let mut game_info = line.split(": ");
-        if let Some(game_id) = game_info.nth(0) {
-            if let Some(id_str) = game_id.split(' ').nth(1) {
-                if let Ok(id) = id_str.parse::<u32>() {
-                    if let Some(sets) = game_info.nth(0) {
-                        if is_game_possible_part1(sets) {
-                            result = result + id;
+use crate::PuzzleParts;
+
+pub struct Puzzle;
+
+impl PuzzleParts for Puzzle {
+    fn run_part1(&self, input: &[String]) -> String {
+        let mut result = 0;
+        for line in input {
+            let mut game_info = line.split(": ");
+            if let Some(game_id) = game_info.nth(0) {
+                if let Some(id_str) = game_id.split(' ').nth(1) {
+                    if let Ok(id) = id_str.parse::<u32>() {
+                        if let Some(sets) = game_info.nth(0) {
+                            if is_game_possible(sets) {
+                                result = result + id;
+                            }
                         }
                     }
                 }
             }
         }
+
+        result.to_string()
     }
-    println!("{result}");
+
+    fn run_part2(&self, input: &[String]) -> String {
+        let mut result = 0;
+        for line in input {
+            let mut game_info = line.split(": ");
+            if let Some(sets) = game_info.nth(1) {
+                result = result + min_cubes_in_game(sets);
+            }
+        }
+
+        result.to_string()
+    }
 }
 
-fn is_game_possible_part1(sets: &str) -> bool {
+fn is_game_possible(sets: &str) -> bool {
     for set in sets.split("; ") {
         let cubes = set.split(", ");
         for cube in cubes {
@@ -40,17 +59,6 @@ fn is_game_possible_part1(sets: &str) -> bool {
         }
     }
     return true;
-}
-
-pub fn run_part2(input: &[String]) {
-    let mut result = 0;
-    for line in input {
-        let mut game_info = line.split(": ");
-        if let Some(sets) = game_info.nth(1) {
-            result = result + min_cubes_in_game(sets);
-        }
-    }
-    println!("{result}");
 }
 
 fn min_cubes_in_game(sets: &str) -> u32 {

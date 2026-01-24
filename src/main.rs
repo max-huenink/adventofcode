@@ -1,6 +1,11 @@
 use std::time::Instant;
-mod year2023;
-mod year2025;
+
+mod years;
+
+trait PuzzleParts {
+    fn run_part1(&self, input: &[String]) -> String;
+    fn run_part2(&self, input: &[String]) -> String;
+}
 
 fn main() {
     let supported_puzzles = [
@@ -28,27 +33,17 @@ fn main() {
         .filter_map(|p| p.trim().parse::<i32>().ok())
         .collect();
 
-    let puzzle_func = match puzzle_parts[..] {
-        [2023, 1, 1] => year2023::day1::run_part1,
-        [2023, 1, 2] => year2023::day1::run_part2,
-        [2023, 2, 1] => year2023::day2::run_part1,
-        [2023, 2, 2] => year2023::day2::run_part2,
-        [2023, 3, 1] => year2023::day3::run_part1,
-        [2023, 3, 2] => year2023::day3::run_part2,
-        [2025, 1, 1] => year2025::day1::run_part1,
-        [2025, 1, 2] => year2025::day1::run_part2,
-        [2025, 2, 1] => year2025::day2::run_part1,
-        [2025, 2, 2] => year2025::day2::run_part2,
-        [2025, 3, 1] => year2025::day3::run_part1,
-        [2025, 3, 2] => year2025::day3::run_part2,
-        [2025, 4, 1] => year2025::day4::run_part1,
-        [2025, 4, 2] => year2025::day4::run_part2,
-        [2025, 5, 1] => year2025::day5::run_part1,
-        [2025, 5, 2] => year2025::day5::run_part2,
-        [2025, 6, 1] => year2025::day6::run_part1,
-        [2025, 6, 2] => year2025::day6::run_part2,
-        [2025, 7, 1] => year2025::day7::run_part1,
-        [2025, 7, 2] => year2025::day7::run_part2,
+    let puzzle: Box<dyn PuzzleParts> = match puzzle_parts[..2] {
+        [2023, 1] => Box::new(years::year2023::day1::Puzzle {}),
+        [2023, 2] => Box::new(years::year2023::day2::Puzzle {}),
+        [2023, 3] => Box::new(years::year2023::day3::Puzzle {}),
+        [2025, 1] => Box::new(years::year2025::day1::Puzzle {}),
+        [2025, 2] => Box::new(years::year2025::day2::Puzzle {}),
+        [2025, 3] => Box::new(years::year2025::day3::Puzzle {}),
+        [2025, 4] => Box::new(years::year2025::day4::Puzzle {}),
+        [2025, 5] => Box::new(years::year2025::day5::Puzzle {}),
+        [2025, 6] => Box::new(years::year2025::day6::Puzzle {}),
+        [2025, 7] => Box::new(years::year2025::day7::Puzzle {}),
         _ => panic!("Puzzle not supported, you entered {puzzle_parts:?}"),
     };
 
@@ -74,10 +69,18 @@ fn main() {
     puzzle_input.pop();
 
     let start_time = Instant::now();
-    puzzle_func(&puzzle_input);
+
+    let ans = match puzzle_parts[..] {
+        [.., 1] => puzzle.run_part1(&puzzle_input),
+        [.., 2] => puzzle.run_part2(&puzzle_input),
+        _ => panic!(""),
+    };
+
     let end_time = Instant::now();
     let duration = end_time - start_time;
+
     println!("Run took: {duration:?}");
+    println!("Answer: {ans}");
 }
 
 fn read_input() -> Option<String> {
