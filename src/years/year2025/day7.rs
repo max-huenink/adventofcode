@@ -42,7 +42,7 @@ impl PuzzleParts for Puzzle {
     }
 
     fn run_part2(&self, input: &[String]) -> String {
-        let mut beams = HashMap::<usize, u32>::new();
+        let mut beams = HashMap::<usize, u64>::new();
 
         let Some(first_line) = input.first() else {
             panic!("No first line!");
@@ -88,7 +88,7 @@ impl PuzzleParts for Puzzle {
             }
         }
 
-        let timelines = beams.values().sum::<u32>();
+        let timelines = beams.values().sum::<u64>();
 
         timelines.to_string()
     }
