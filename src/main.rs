@@ -1,11 +1,6 @@
 use std::time::Instant;
 
-mod years;
-
-trait PuzzleParts {
-    fn run_part1(&self, input: &[String]) -> String;
-    fn run_part2(&self, input: &[String]) -> String;
-}
+use adventofcode::{PuzzleParts, years};
 
 fn main() {
     let supported_puzzles = [
@@ -70,9 +65,9 @@ fn main() {
 
     let start_time = Instant::now();
 
-    let ans = match puzzle_parts[..] {
-        [.., 1] => puzzle.run_part1(&puzzle_input),
-        [.., 2] => puzzle.run_part2(&puzzle_input),
+    let ans = match puzzle_parts[puzzle_parts.len() - 1] {
+        1 => puzzle.run_part1(&puzzle_input),
+        2 => puzzle.run_part2(&puzzle_input),
         _ => panic!(""),
     };
 
