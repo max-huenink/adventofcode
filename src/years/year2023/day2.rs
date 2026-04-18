@@ -7,16 +7,13 @@ impl PuzzleParts for Puzzle {
         let mut result = 0;
         for line in input {
             let mut game_info = line.split(": ");
-            if let Some(game_id) = game_info.nth(0) {
-                if let Some(id_str) = game_id.split(' ').nth(1) {
-                    if let Ok(id) = id_str.parse::<u32>() {
-                        if let Some(sets) = game_info.nth(0) {
-                            if is_game_possible(sets) {
-                                result = result + id;
-                            }
-                        }
-                    }
-                }
+            if let Some(game_id) = game_info.nth(0)
+                && let Some(id_str) = game_id.split(' ').nth(1)
+                && let Ok(id) = id_str.parse::<u32>()
+                && let Some(sets) = game_info.nth(0)
+                && is_game_possible(sets)
+            {
+                result += id;
             }
         }
 
@@ -28,7 +25,7 @@ impl PuzzleParts for Puzzle {
         for line in input {
             let mut game_info = line.split(": ");
             if let Some(sets) = game_info.nth(1) {
-                result = result + min_cubes_in_game(sets);
+                result += min_cubes_in_game(sets);
             }
         }
 
@@ -41,24 +38,24 @@ fn is_game_possible(sets: &str) -> bool {
         let cubes = set.split(", ");
         for cube in cubes {
             let mut section = cube.split(' ');
-            if let Some(count_str) = section.nth(0) {
-                if let Ok(count) = count_str.parse::<u32>() {
-                    if let Some(color_str) = section.nth(0) {
-                        let x = match color_str {
-                            "red" => count <= 12,
-                            "green" => count <= 13,
-                            "blue" => count <= 14,
-                            _ => false,
-                        };
-                        if !x {
-                            return false;
-                        }
-                    }
+            if let Some(count_str) = section.next()
+                && let Ok(count) = count_str.parse::<u32>()
+                && let Some(color_str) = section.next()
+            {
+                let x = match color_str {
+                    "red" => count <= 12,
+                    "green" => count <= 13,
+                    "blue" => count <= 14,
+                    _ => false,
+                };
+                if !x {
+                    return false;
                 }
             }
         }
     }
-    return true;
+
+    true
 }
 
 fn min_cubes_in_game(sets: &str) -> u32 {
@@ -69,25 +66,25 @@ fn min_cubes_in_game(sets: &str) -> u32 {
         let cubes = set.split(", ");
         for cube in cubes {
             let mut section = cube.split(' ');
-            if let Some(count_str) = section.nth(0) {
-                if let Ok(count) = count_str.parse::<u32>() {
-                    if let Some(color_str) = section.nth(0) {
-                        match color_str {
-                            "red" if count > red => {
-                                red = count;
-                            }
-                            "green" if count > green => {
-                                green = count;
-                            }
-                            "blue" if count > blue => {
-                                blue = count;
-                            }
-                            _ => {}
-                        };
+            if let Some(count_str) = section.next()
+                && let Ok(count) = count_str.parse::<u32>()
+                && let Some(color_str) = section.next()
+            {
+                match color_str {
+                    "red" if count > red => {
+                        red = count;
                     }
-                }
+                    "green" if count > green => {
+                        green = count;
+                    }
+                    "blue" if count > blue => {
+                        blue = count;
+                    }
+                    _ => {}
+                };
             }
         }
     }
-    return red * green * blue;
+
+    red * green * blue
 }

@@ -11,7 +11,7 @@ fn main() {
     for supported in supported_puzzles {
         println!("{supported}");
     }
-    println!("");
+    println!();
     println!("Input the year, day, and part of the puzzle to solve. e.g. 2025/1/1");
 
     let Some(puzzle) = read_input() else {

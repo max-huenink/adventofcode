@@ -13,9 +13,8 @@ impl PuzzleParts for Puzzle {
 
         for row_idx in 0..points.len() {
             let row = &points[row_idx];
-            for col_idx in 0..row.len() {
-                let col = row[col_idx];
-                if col && check_bounds(row_idx, col_idx, &points) {
+            for (col_idx, col) in row.iter().enumerate() {
+                if *col && check_bounds(row_idx, col_idx, &points) {
                     count += 1;
                 }
             }
@@ -39,8 +38,7 @@ impl PuzzleParts for Puzzle {
 
             for row_idx in 0..points.len() {
                 let row = &points[row_idx];
-                for col_idx in 0..row.len() {
-                    let col = &row[col_idx];
+                for (col_idx, col) in row.iter().enumerate() {
                     if *col && check_bounds(row_idx, col_idx, &points) {
                         points_found.push((row_idx, col_idx));
                         count += 1;
@@ -60,17 +58,11 @@ impl PuzzleParts for Puzzle {
     }
 }
 
-fn check_bounds(start_row_idx: usize, start_col_idx: usize, points: &Vec<Vec<bool>>) -> bool {
+fn check_bounds(start_row_idx: usize, start_col_idx: usize, points: &[Vec<bool>]) -> bool {
     let mut count = 0;
 
-    let row_start_range = match start_row_idx.checked_sub(1) {
-        Some(v) => v,
-        None => 0,
-    };
-    let col_start_range = match start_col_idx.checked_sub(1) {
-        Some(v) => v,
-        None => 0,
-    };
+    let row_start_range = start_row_idx.saturating_sub(1);
+    let col_start_range = start_col_idx.saturating_sub(1);
 
     for row_idx in row_start_range..(start_row_idx + 2) {
         if row_idx < points.len() {

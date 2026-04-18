@@ -8,10 +8,9 @@ impl PuzzleParts for Puzzle {
         let mut operations = Vec::<char>::new();
 
         for line in input {
-            let mut columns = line.split_whitespace();
+            let columns = line.split_whitespace();
 
-            let mut idx = 0;
-            while let Some(cell) = columns.next() {
+            for (idx, cell) in columns.enumerate() {
                 if let Ok(num) = cell.parse::<i64>() {
                     if idx >= numbers.len() {
                         numbers.push(vec![]);
@@ -23,8 +22,6 @@ impl PuzzleParts for Puzzle {
                 {
                     operations.push(op);
                 }
-
-                idx += 1;
             }
         }
 
@@ -70,12 +67,11 @@ impl PuzzleParts for Puzzle {
         }
 
         let mut sum = 0;
-        let mut idx = 0;
         let number_columns = numbers
             .iter()
             .map(|col| col.iter().map(|c| c.chars().rev()).collect::<Vec<_>>());
 
-        for mut col in number_columns {
+        for (idx, mut col) in number_columns.enumerate() {
             let op = operations_with_indices[idx].1;
             let mut accumulator = 0;
             let mut found_a_number = true;
@@ -109,7 +105,6 @@ impl PuzzleParts for Puzzle {
             }
 
             sum += accumulator;
-            idx += 1;
         }
 
         sum.to_string()

@@ -105,10 +105,9 @@ impl PuzzleParts for Puzzle {
                 if check.contains(&range.start)
                     && (!(range.contains(&check.start)
                         && (range.contains(&check.end) || range.end == check.end)))
+                    && check.end > end
                 {
-                    if check.end > end {
-                        end = check.end;
-                    }
+                    end = check.end;
                 }
             }
 

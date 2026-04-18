@@ -66,9 +66,9 @@ impl PuzzleParts for Puzzle {
 
                         if length == 1 {
                             continue;
-                        } else if id_str.chars().all(|c| c == id_str.chars().nth(0).unwrap()) {
-                            count += id;
-                        } else if id_has_repeating_pattern(&id_str, length) {
+                        } else if id_str.chars().all(|c| c == id_str.chars().nth(0).unwrap())
+                            || id_has_repeating_pattern(&id_str, length)
+                        {
                             count += id;
                         }
                     }
@@ -84,7 +84,7 @@ impl PuzzleParts for Puzzle {
 
 fn id_has_repeating_pattern(id_str: &str, length: usize) -> bool {
     for partition_size in 2..(length / 2) + 1 {
-        if length % partition_size == 0 {
+        if length.is_multiple_of(partition_size) {
             if partition_size == length / 2 {
                 if id_str[..partition_size] == id_str[partition_size..] {
                     return true;

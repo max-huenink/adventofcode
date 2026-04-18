@@ -6,17 +6,14 @@ impl PuzzleParts for Puzzle {
     fn run_part1(&self, input: &[String]) -> String {
         let mut result = 0;
         let mut x = vec!['.'; 10 * 10];
-        let mut i = 0;
 
-        for line in input {
+        for (i, line) in input.iter().enumerate() {
             for (j, char) in line.char_indices() {
                 x[i * j] = char;
             }
-            i = i + 1;
         }
 
-        for i in 0..(10 * 10) {
-            let c = x[i];
+        for c in x.iter().take(10 * 10) {
             if let Some(d) = c.to_digit(10) {
                 result += d;
             }
